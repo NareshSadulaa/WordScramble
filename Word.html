@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="words.js" defer></script>
+    <script src="script.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: cursive;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #5372F0;
+        }
+
+        .container {
+            width: 450px;
+            border-radius: 7px;
+            background: white;
+        }
+
+        .container h2 {
+            font-size: 25px;
+            font-weight: 500;
+            padding: 18px 25px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .container .content {
+            margin: 25px 20px 35px;
+        }
+
+        .container .word {
+            font-size: 33px;
+            font-weight: 500;
+            text-align: center;
+            letter-spacing: 24px;
+            margin-right: -24px;
+            text-transform: uppercase;
+        }
+
+        .content .details {
+            margin: 25px 0 20px;
+        }
+
+        .details p {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .details p b {
+            font-weight: 500;
+        }
+
+        .content input {
+            width: 100%;
+            height: 60px;
+            outline: none;
+            padding: 0 16px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 1px solid #aaa;
+        }
+
+        .content .buttons {
+            display: flex;
+            margin-top: 20px;
+            justify-content: space-between;
+        }
+
+        .buttons button {
+            border: none;
+            outline: none;
+            color: #fff;
+            cursor: pointer;
+            padding: 15px 0;
+            font-size: 17px;
+            border-radius: 5px;
+            width: calc(100% / 2 - 8px);
+        }
+
+        .buttons .refresh-word {
+            background: #6c757d;
+        }
+
+        .buttons .check-word {
+            background: #5372F0;
+        }
+
+        @media (max-width: 480px) {
+            * {
+                font-family: serif;
+            }
+
+            .container {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .container h2 {
+                font-size: 20px;
+            }
+
+            .container .word {
+                font-size: 24px;
+                letter-spacing: 10px;
+                margin-right: -10px;
+            }
+
+            .details p {
+                font-size: 14px;
+            }
+
+            .content input {
+                font-size: 14px;
+                height: 45px;
+            }
+
+            .buttons button {
+                font-size: 14px;
+                padding: 12px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Word Scramble</h2>
+        <div class="content">
+            <p class="word"></p>
+            <div class="details">
+                <p class="hint">Hint: <span></span></p>
+                <p class="time">Time Left: <span><b>30</b>s</span></p>
+            </div>
+            <input type="text" placeholder="Enter Valid Word">
+            <div class="buttons">
+                <button class="refresh-word">Refresh word</button>
+                <button class="check-word">Check Word</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const words = [
+            {
+                word: "addition",
+                hint: "The process of adding numbers"
+            },
+            {
+                word: "meeting",
+                hint: "Event in which people come together"
+            },
+            {
+                word: "number",
+                hint: "Math symbol used for counting"
+            },
+            {
+                word: "exchange",
+                hint: "The act of trading"
+            },
+            {
+                word: "canvas",
+                hint: "Piece of fabric for oil painting"
+            },
+            {
+                word: "garden",
+                hint: "Space for planting flower and plant"
+            },
+            {
+                word: "position",
+                hint: "Location of someone or something"
+            },
+            {
+                word: "feather",
+                hint: "Hair like outer covering of bird"
+            },
+            {
+                word: "comfort",
+                hint: "A pleasant feeling of relaxation"
+            },
+            {
+                word: "tongue",
+                hint: "The muscular organ of mouth"
+            },
+            {
+                word: "expansion",
+                hint: "The process of increase or grow"
+            },
+            {
+                word: "country",
+                hint: "A politically identified region"
+            },
+            {
+                word: "group",
+                hint: "A number of objects or persons"
+            },
+            {
+                word: "taste",
+                hint: "Ability of tongue to detect flavour"
+            },
+            {
+                word: "store",
+                hint: "Large shop where goods are traded"
+            },
+            {
+                word: "field",
+                hint: "Area of land for farming activities"
+            },
+            {
+                word: "friend",
+                hint: "Person other than a family member"
+            },
+            {
+                word: "pocket",
+                hint: "A bag for carrying small items"
+            },
+            {
+                word: "needle",
+                hint: "A thin and sharp metal pin"
+            },
+            {
+                word: "expert",
+                hint: "Person with extensive knowledge"
+            },
+            {
+                word: "statement",
+                hint: "A declaration of something"
+            },
+            {
+                word: "second",
+                hint: "One-sixtieth of a minute"
+            },
+            {
+                word: "library",
+                hint: "Place containing collection of books"
+            },
+            {
+                word: "Ishika",
+                hint: "Duniya ki sabse Cute Girl"
+            }
+        ]
+        const wordText = document.querySelector(".word"),
+            timeText = document.querySelector(".time b"),
+            hintText = document.querySelector(".hint span"),
+            inputField = document.querySelector("input"),
+            refreshbtn = document.querySelector(".refresh-word"),
+            checkbtn = document.querySelector(".check-word");
+
+        let correctWord, timer;
+
+        const initTimer = maxTime => {
+            clearInterval(timer)
+            timer = setInterval(() => {
+                if (maxTime > 0) {
+                    maxTime--;
+                    return timeText.innerText = maxTime;
+                }
+                clearInterval(timer)
+                alert(`Time's Up!! ${correctWord.toUpperCase()} was the correct word`)
+                initGame()
+            }, 1000);
+        }
+
+        const initGame = () => {
+            initTimer(30)
+            let randomObj = words[Math.floor(Math.random() * words.length)];
+            let wordArray = randomObj.word.split("");
+            for (i = wordArray.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [wordArray[i], wordArray[j]] = [wordArray[j], wordArray[i]];
+            }
+            wordText.innerText = wordArray.join("");
+            hintText.innerText = randomObj.hint;
+            correctWord = randomObj.word.toLowerCase()
+            inputField.value = ""
+            inputField.setAttribute("maxlength", correctWord.length)
+            console.log(randomObj);
+        }
+        initGame();
+
+        refreshbtn.addEventListener("click", initGame)
+
+
+        const checkWord = () => {
+            let userWord = inputField.value.toLocaleLowerCase()
+            if (!userWord) return alert("Please enter a word")
+            if (userWord !== correctWord) return alert(`oops!! ${userWord} is incorrect`)
+            else return alert(`${userWord} is correct`)
+            initGame()
+        }
+
+        checkbtn.addEventListener("click", checkWord)
+    </script>
+</body>
+
+</html>
