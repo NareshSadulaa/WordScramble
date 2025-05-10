@@ -90,9 +90,5 @@ const words = [
     {
         word: "library",
         hint: "Place containing collection of books"
-    },
-    {
-        word : "Ishika",
-        hint : "Duniya ki sabse Cute Girl"
     }
 ]
